@@ -45,6 +45,8 @@ void libererListe(Liste * liste);
 
 Liste * fusion(Liste * l1, Liste * l2);
 
+Liste * ssc(Liste * l);
+
 
 void testListe();
 

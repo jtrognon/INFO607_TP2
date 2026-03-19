@@ -174,6 +174,36 @@ Liste * fusion(Liste * l1, Liste * l2)
 }
 
 
+Liste * ssc(Liste * l)
+{
+    /**
+     * \brief Renvoie la première sous-suite croissante de la liste.
+     * \param l Une liste d'éléments.
+     * \return La sous-suite croissante de la liste.
+     */
+    Liste * res = creerListe();    
+    Liste * ptInt = l;
+    
+    if (!vide(ptInt))
+    {
+        Element ePrecedent = premier(ptInt);
+        while(!vide(ptInt) && ePrecedent <= premier(ptInt)) // ajout 
+        {
+            ePrecedent = premier(ptInt);
+            res = suffixer(res, ePrecedent);
+            
+            ptInt = reste(ptInt);
+        }
+    }
+
+    return res;
+}
+
+
+
+
+
+
 
 void testListe()
 {
@@ -277,18 +307,44 @@ void testListe()
 
     // Liste A vide 
     Liste * fusion3 = fusion(A, B);
-    Test(premier(fusion3) == 'a' && 
-    premier(reste(fusion3)) == 'c' && 
-    premier(reste(reste(fusion3))) == 'e' && 
-    premier(reste(reste(reste(fusion3)))) == 'f' && 
-    premier(reste(reste(reste(reste(fusion3))))) == 'g' &&
-    premier(reste(reste(reste(reste(reste(fusion3)))))) == 'g' &&
-    premier(reste(reste(reste(reste(reste(reste(fusion3))))))) == 'k' &&
-    premier(reste(reste(reste(reste(reste(reste(reste(fusion3)))))))) == 'o' &&
-    premier(reste(reste(reste(reste(reste(reste(reste(reste(fusion3))))))))) == 'q' &&
-    premier(reste(reste(reste(reste(reste(reste(reste(reste(reste(fusion3)))))))))) == 'u' &&
-    premier(reste(reste(reste(reste(reste(reste(reste(reste(reste(reste(fusion3))))))))))) == 'z'
-    , "Fusion de la liste A (vide) avec la liste B (non vide).");
+    Test(
+        premier(fusion3) == 'a' && 
+        premier(reste(fusion3)) == 'c' && 
+        premier(reste(reste(fusion3))) == 'e' && 
+        premier(reste(reste(reste(fusion3)))) == 'f' && 
+        premier(reste(reste(reste(reste(fusion3))))) == 'g' &&
+        premier(reste(reste(reste(reste(reste(fusion3)))))) == 'g' &&
+        premier(reste(reste(reste(reste(reste(reste(fusion3))))))) == 'k' &&
+        premier(reste(reste(reste(reste(reste(reste(reste(fusion3)))))))) == 'o' &&
+        premier(reste(reste(reste(reste(reste(reste(reste(reste(fusion3))))))))) == 'q' &&
+        premier(reste(reste(reste(reste(reste(reste(reste(reste(reste(fusion3)))))))))) == 'u' &&
+        premier(reste(reste(reste(reste(reste(reste(reste(reste(reste(reste(fusion3))))))))))) == 'z'
+        , "Fusion de la liste A (vide) avec la liste B (non vide)."
+    );
+
+
+    // ================= SSC =================
+    // Liste vide
+    Test(ssc(creerListe()) == creerListe(), "Sous-liste croissante d'une liste vide.");
+
+    // Liste <a, e, f, c, g, h>
+    Liste * l3 = creerListe();
+    l3 = suffixer(l3, 'a');
+    l3 = suffixer(l3, 'e');
+    l3 = suffixer(l3, 'f');
+    l3 = suffixer(l3, 'c');
+    l3 = suffixer(l3, 'g');
+    l3 = suffixer(l3, 'h');
+    
+    Liste * ssc1 = ssc(l3);
+    Test(
+        premier(ssc1) == 'a' && 
+        premier(reste(ssc1)) == 'e' && 
+        premier(reste(reste(ssc1))) == 'f' &&
+        vide(reste(reste(reste(ssc1)))),
+        "Sous-liste croissante de <a, e, f, c, g, h>."
+    );
+
 
 
 
@@ -308,4 +364,7 @@ void testListe()
     libererListe(fusion1);
     libererListe(fusion2);
     libererListe(fusion3);
+
+    libererListe(l3);
+    libererListe(ssc1);
 }
