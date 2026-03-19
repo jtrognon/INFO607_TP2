@@ -30,9 +30,9 @@ Liste * creerListe();
 
 bool vide(Liste * liste);
 
-void prefixer(Liste ** liste, Element element);
+Liste * prefixer(Liste * liste, Element element);
 
-void suffixer(Liste ** liste, Element element);
+Liste * suffixer(Liste * liste, Element element);
 
 Element premier(Liste * liste);
 
@@ -43,6 +43,7 @@ void afficherListe(Liste * liste);
 void libererListe(Liste * liste);
 
 
+Liste * fusion(Liste * l1, Liste * l2);
 
 
 void testListe();
