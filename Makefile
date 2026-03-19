@@ -4,12 +4,12 @@
 all: bin/TP2_INFO607_BECHET_TROGNON
 
 # Règle pour construire l'exécutable
-bin/TP2_INFO607_BECHET_TROGNON: main.o 
-	gcc $< -g -O0 -Wall -Wextra -I./headers  -o $@ 
+bin/TP2_INFO607_BECHET_TROGNON: main.o Liste.o
+	gcc $^ -g -O0 -Wall -Wextra -I./headers  -o $@ 
 # -I pour le chemin des '#include'
 
 # Ecrit ici car pas de .h donc marche par avec regle generique 
-main.o: src/main.c 
+main.o: src/main.c Liste.o
 	gcc -c $< -g -O0  -Wall -Wextra -I./headers  -o $@
 
 
@@ -18,4 +18,4 @@ main.o: src/main.c
 
 # Cible pour nettoyer les fichiers objets et l'exécutable
 clean:
-	rm -f *.o ./lib/* ./bin/*
+	rm -f *.o ./bin/*
