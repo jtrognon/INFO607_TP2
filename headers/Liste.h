@@ -47,6 +47,8 @@ Liste * fusion(Liste * l1, Liste * l2);
 
 Liste * ssc(Liste * l);
 
+Liste * comp(Liste * l1, Liste * l2);
+
 
 void testListe();
 

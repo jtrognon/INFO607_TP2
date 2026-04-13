@@ -200,6 +200,20 @@ Liste * ssc(Liste * l)
 }
 
 
+Liste * comp(Liste * l1, Liste * l2)
+{
+    Liste * ptInt1 = l1;
+    Liste * ptInt2 = l2;
+
+    while (!vide(ptInt1) && !vide(ptInt2) && premier(ptInt1) == premier(ptInt2))
+    {
+        ptInt1 = reste(ptInt1);
+        ptInt2 = reste(ptInt2);
+    }
+
+    return _copieListe(ptInt2);
+}
+
 
 
 
@@ -346,10 +360,57 @@ void testListe()
     );
 
 
+    // ================= COMP =================
+    // Liste A et B vides
+    Test(vide(comp(creerListe(), creerListe())), "sous-suite complément de deux listes vides");
 
+    // Liste A vide et B non-vide
+    Liste * l4 = creerListe();
+    l4 = suffixer(l4, 'r');
+    l4 = suffixer(l4, 'y');
+    l4 = suffixer(l4, 'f');
+    l4 = suffixer(l4, 'n');
+    l4 = suffixer(l4, 'd');
+    l4 = suffixer(l4, 'z');
 
+    Liste * comp1 = comp(creerListe(), l4);
+    Test(
+        premier(comp1) == 'r' && 
+        premier(reste(comp1)) == 'y' && 
+        premier(reste(reste(comp1))) == 'f' && 
+        premier(reste(reste(reste(comp1)))) == 'n' && 
+        premier(reste(reste(reste(reste(comp1))))) == 'd' &&
+        premier(reste(reste(reste(reste(reste(comp1)))))) == 'z'
+        , "sous-suite complément de A (vide) dans B (non-vide)"
+    );
 
+    // Liste A non-vide et B vide
+    Liste * l5 = creerListe();
+    l5 = suffixer(l5, 'r');
+    l5 = suffixer(l5, 'y');
+    l5 = suffixer(l5, 'f');
 
+    Liste * comp2 = comp(l5, creerListe());
+    Test(
+        vide(comp2)
+        , "sous-suite complément de A (vide) dans B (non-vide)"
+    );
+
+    // Liste A non-vide et B non-vide avec taille(A) > taille(B)
+    Liste * comp3 = comp(l4, l5);
+    Test(
+        vide(comp3),
+        "sous-suite complément de A (non-vide) dans B (non-vide) avec taille(A) > taille(B)"
+    );
+
+    // Liste A non-vide et B non-vide avec taille(A) < taille(B)
+    Liste * comp4 = comp(l5, l4);
+    Test(
+        premier(comp4) == 'n' && 
+        premier(reste(comp4)) == 'd' && 
+        premier(reste(reste(comp4))) == 'z'
+        , "sous-suite complément de A (non-vide) dans B (non-vide) avec taille(A) < taille(B)"
+    );
 
 
 
@@ -367,4 +428,11 @@ void testListe()
 
     libererListe(l3);
     libererListe(ssc1);
+
+    libererListe(l4);
+    libererListe(l5);
+    libererListe(comp1);
+    libererListe(comp2);
+    libererListe(comp3);
+    libererListe(comp4);
 }
