@@ -105,7 +105,7 @@ void afficherListe(Liste * liste)
             eCourant = reste(eCourant);
         }
 
-        printf("%c", premier(eCourant));
+        printf("%c\n", premier(eCourant));
     }
 }
 
@@ -144,14 +144,13 @@ Liste * _copieListe(Liste * l)
 }
 
 
-Liste * fusion(Liste * l1, Liste * l2)
+Liste * fusion_rec(Liste * l1, Liste * l2)
 {
     /**
-     * \brief Renvoie une fusion des deux listes.
+     * \brief Renvoie une fusion des deux listes. (version récursive)
      * \param l1 La première liste triée à fusionner.
      * \param l2 La deuxième liste triée à fusionner.
      * \return La fusion des deux listes.
-     * 
      */
     if (vide(l1))
     {
@@ -165,19 +164,67 @@ Liste * fusion(Liste * l1, Liste * l2)
 
     if (premier(l1) < premier(l2)) // on insère le premier élément de l1
     {
-        return prefixer(fusion(reste(l1), l2), premier(l1));
+        return prefixer(fusion_rec(reste(l1), l2), premier(l1));
     }
     else // on insère le premier élément de l2
     {
-        return prefixer(fusion(l1, reste(l2)), premier(l2));
+        return prefixer(fusion_rec(l1, reste(l2)), premier(l2));
     }
 }
 
 
-Liste * ssc(Liste * l)
+Liste * fusion_it(Liste * l1, Liste * l2)
 {
     /**
-     * \brief Renvoie la première sous-suite croissante de la liste.
+     * \brief Renvoie une fusion des deux listes. (version itérative)
+     * \param l1 La première liste triée à fusionner.
+     * \param l2 La deuxième liste triée à fusionner.
+     * \return La fusion des deux listes.
+     */
+    Liste * res = creerListe();
+    Liste * ptInt1 = l1;
+    Liste * ptInt2 = l2;
+
+    while(!vide(ptInt1) && !vide(ptInt2))
+    {
+        if (premier(ptInt1) < premier(ptInt2))
+        {
+            res = suffixer(res, premier(ptInt1));
+            ptInt1 = reste(ptInt1);
+        }
+        else
+        {
+            res = suffixer(res, premier(ptInt2));
+            ptInt2 = reste(ptInt2);
+        }
+    }
+
+    // Ajout des valeurs restantes
+    if (vide(ptInt1))
+    {
+        while(!vide(ptInt2))
+        {
+            res = suffixer(res, premier(ptInt2));
+            ptInt2 = reste(ptInt2);
+        }
+    }
+    else
+    {
+        while(!vide(ptInt1))
+        {
+            res = suffixer(res, premier(ptInt1));
+            ptInt1 = reste(ptInt1);
+        }
+    }
+
+    return res;
+}
+
+
+Liste * ssc_it(Liste * l)
+{
+    /**
+     * \brief Renvoie la première sous-suite croissante de la liste. (version itérative)
      * \param l Une liste d'éléments.
      * \return La sous-suite croissante de la liste.
      */
@@ -200,12 +247,44 @@ Liste * ssc(Liste * l)
 }
 
 
-Liste * comp(Liste * l1, Liste * l2)
+Liste * ssc_rec(Liste * l)
 {
+    /**
+     * \brief Renvoie la première sous-suite croissante de la liste. (version récursive)
+     * \param l Une liste d'éléments.
+     * \return La sous-suite croissante de la liste.
+     */
+    if (vide(l) || vide(reste(l))) // 0 ou 1 élément
+    {
+        return l;
+    }
+    else
+    {
+        if (premier(l) <= premier(reste(l)))
+        {
+            return prefixer(ssc_rec(reste(l)), premier(l));
+        } 
+        else 
+        {
+
+            return prefixer(creerListe(), premier(l));
+        }
+    }
+}
+
+
+Liste * comp_it(Liste * l1, Liste * l2)
+{
+    /**
+     * \brief Renvoie le complément de la première liste dans la deuxième. (version itérative)
+     * \param l1 La première liste.
+     * \param l2 La deuxième liste.
+     * \return Le complément de la première liste dans la deuxième.
+     */
     Liste * ptInt1 = l1;
     Liste * ptInt2 = l2;
 
-    while (!vide(ptInt1) && !vide(ptInt2) && premier(ptInt1) == premier(ptInt2))
+    while (!vide(ptInt1) && !vide(ptInt2)) // Pas besoin de vérifier que l1 commence l2 car nous supposons que c'est le cas 
     {
         ptInt1 = reste(ptInt1);
         ptInt2 = reste(ptInt2);
@@ -215,7 +294,56 @@ Liste * comp(Liste * l1, Liste * l2)
 }
 
 
+Liste * comp_rec(Liste * l1, Liste * l2)
+{
+    /**
+     * \brief Renvoie le complément de la première liste dans la deuxième. (version récursive)
+     * \param l1 La première liste.
+     * \param l2 La deuxième liste.
+     * \return Le complément de la première liste dans la deuxième.
+     */
+    if (vide(l1) | vide(l2))
+    {
+        return _copieListe(l2);
+    }
+    else
+    {
+        return comp_rec(reste(l1), reste(l2));
+    }
+}
 
+
+Liste * tri_rec(Liste * l)
+{
+    /**
+     * \brief Tri la liste donnée par fusion. (version itérative)
+     * 
+     */
+
+    Liste * l1 = ssc_rec(l);
+    Liste * l2 = comp_rec(l1, l);
+
+    if (vide(l2))
+    {
+        return _copieListe(l1);
+    }
+    else
+    {
+        return fusion_rec(l1, tri_rec(l2));
+    }
+}
+
+
+Liste * tri_it(Liste * l)
+{
+    
+    // while(!vide(l2))
+    // {
+
+    // }
+    // TODO
+    return l;
+}
 
 
 
@@ -283,6 +411,31 @@ void testListe()
 
 
     // ================= Fusion =================
+    testFusion(fusion_it);
+    testFusion(fusion_rec);
+
+    // ================= SSC =================
+    testSsc(ssc_it);
+    testSsc(ssc_rec);
+
+    // ================= COMP =================
+    testComp(comp_it);
+    testComp(comp_rec);
+
+    // ================= Tri =================
+    testTri(tri_rec);
+    testTri(tri_it);
+
+
+    // Test de libération de la mémoire avec 'valgrind --leak-check=full ./<executable>'
+    libererListe(l1);
+    libererListe(l1Bis);
+    libererListe(l2);
+}
+
+
+void testFusion(Liste * (fusion)(Liste *, Liste *))
+{
     // Liste A et B vide
     Test(fusion(creerListe(), creerListe()) == creerListe(), "Fusion de deux listes vides.");
 
@@ -337,7 +490,18 @@ void testListe()
     );
 
 
-    // ================= SSC =================
+
+    libererListe(A);
+    libererListe(B);
+
+    libererListe(fusion1);
+    libererListe(fusion2);
+    libererListe(fusion3);
+}
+
+
+void testSsc(Liste * (ssc)(Liste *))
+{
     // Liste vide
     Test(ssc(creerListe()) == creerListe(), "Sous-liste croissante d'une liste vide.");
 
@@ -360,7 +524,13 @@ void testListe()
     );
 
 
-    // ================= COMP =================
+    libererListe(l3);
+    libererListe(ssc1);
+}
+
+
+void testComp(Liste * (comp)(Liste *, Liste *))
+{
     // Liste A et B vides
     Test(vide(comp(creerListe(), creerListe())), "sous-suite complément de deux listes vides");
 
@@ -412,27 +582,67 @@ void testListe()
         , "sous-suite complément de A (non-vide) dans B (non-vide) avec taille(A) < taille(B)"
     );
 
-
-
-    // Test de libération de la mémoire avec 'valgrind --leak-check=full ./<executable>'
-    libererListe(l1);
-    libererListe(l1Bis);
-    libererListe(l2);
-
-    libererListe(A);
-    libererListe(B);
-
-    libererListe(fusion1);
-    libererListe(fusion2);
-    libererListe(fusion3);
-
-    libererListe(l3);
-    libererListe(ssc1);
-
     libererListe(l4);
     libererListe(l5);
     libererListe(comp1);
     libererListe(comp2);
     libererListe(comp3);
     libererListe(comp4);
+}
+
+
+void testTri(Liste * (tri)(Liste *))
+{
+    // Tri d'une liste vide
+    Test(vide(tri(creerListe())), "Tri d'une liste vide.");
+
+    // Tri d'une liste triée
+    Liste * l1 = creerListe();
+    l1 = suffixer(l1, 'a');   
+    l1 = suffixer(l1, 'c');   
+    l1 = suffixer(l1, 'f');   
+    l1 = suffixer(l1, 'r');   
+    l1 = suffixer(l1, 'v');   
+    l1 = suffixer(l1, 'w');   
+    l1 = suffixer(l1, 'z');
+
+
+    Liste * l1Triee = tri(l1);
+    Test(
+        premier(l1Triee) == 'a' && 
+        premier(reste(l1Triee)) == 'c' && 
+        premier(reste(reste(l1Triee))) == 'f' && 
+        premier(reste(reste(reste(l1Triee)))) == 'r' && 
+        premier(reste(reste(reste(reste(l1Triee))))) == 'v' &&
+        premier(reste(reste(reste(reste(reste(l1Triee)))))) == 'w' &&
+        premier(reste(reste(reste(reste(reste(reste(l1Triee))))))) == 'z',
+        "Tri d'une liste triée."
+    );
+
+    // Tri d'une liste non triée
+    Liste * l2 = creerListe();
+    l2 = suffixer(l2, 'c');   
+    l2 = suffixer(l2, 'a');   
+    l2 = suffixer(l2, 'z');
+    l2 = suffixer(l2, 'v');   
+    l2 = suffixer(l2, 'w');   
+    l2 = suffixer(l2, 'r');   
+    l2 = suffixer(l2, 'f');
+    
+    Liste * l2Triee = tri(l2);
+    Test(
+        premier(l2Triee) == 'a' && 
+        premier(reste(l2Triee)) == 'c' && 
+        premier(reste(reste(l2Triee))) == 'f' && 
+        premier(reste(reste(reste(l2Triee)))) == 'r' && 
+        premier(reste(reste(reste(reste(l2Triee))))) == 'v' &&
+        premier(reste(reste(reste(reste(reste(l2Triee)))))) == 'w' &&
+        premier(reste(reste(reste(reste(reste(reste(l2Triee))))))) == 'z',
+        "Tri d'une liste non-triée."
+    );
+
+    libererListe(l1);
+    libererListe(l1Triee);
+    libererListe(l2);
+    libererListe(l2Triee);
 }

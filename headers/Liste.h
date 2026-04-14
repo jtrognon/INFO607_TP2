@@ -3,8 +3,6 @@
 
 #include <stdbool.h>
 
-#define MAX_STATS_PAR_ELEMENT 4
-
 #define Test(cond, msg)\
     do{\
         if (cond) {\
@@ -43,13 +41,26 @@ void afficherListe(Liste * liste);
 void libererListe(Liste * liste);
 
 
-Liste * fusion(Liste * l1, Liste * l2);
+Liste * fusion_it(Liste * l1, Liste * l2);
+Liste * fusion_rec(Liste * l1, Liste * l2);
 
-Liste * ssc(Liste * l);
+Liste * ssc_it(Liste * l);
+Liste * ssc_rec(Liste * l);
 
-Liste * comp(Liste * l1, Liste * l2);
+Liste * comp_it(Liste * l1, Liste * l2);
+Liste * comp_rec(Liste * l1, Liste * l2);
+
+Liste * tri_it(Liste * l);
+Liste * tri_rec(Liste * l);
 
 
 void testListe();
 
+void testFusion(Liste * (fusion)(Liste *, Liste *));
+
+void testSsc(Liste * (ssc)(Liste *));
+
+void testComp(Liste * (comp)(Liste *, Liste *));
+
+void testTri(Liste * (tri)(Liste *));
 #endif
