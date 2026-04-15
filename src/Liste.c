@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
 #include "Liste.h"
 
 
@@ -336,13 +332,29 @@ Liste * tri_rec(Liste * l)
 
 Liste * tri_it(Liste * l)
 {
-    
-    // while(!vide(l2))
-    // {
+    Liste * S = l;
+    Pile * PS = creerPile();
 
-    // }
-    // TODO
-    return l;
+    Liste * l1 = ssc_it(S);
+    Liste * l2 = comp_it(l1, S);
+    while(!vide(l2))
+    {
+        PS = empiler(PS, S);
+        S = l2;
+        l1 = ssc_it(S);
+        l2 = comp_it(l1, S);
+    }
+
+    Liste * R = _copieListe(l1);
+
+    while (!pile_vide(PS))
+    {
+        ResDepiler res = depiler(PS);
+        PS = res.pile;
+        R = fusion_it(R, ssc_it((Liste *) res.valeur));
+    }
+
+    return R;
 }
 
 

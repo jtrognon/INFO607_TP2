@@ -2,6 +2,12 @@
 #define LISTE_H
 
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+
+#include "Pile.h"
 
 #define Test(cond, msg)\
     do{\

@@ -4,7 +4,7 @@
 all: bin/TP2_INFO607_BECHET_TROGNON
 
 # Règle pour construire l'exécutable
-bin/TP2_INFO607_BECHET_TROGNON: main.o Liste.o
+bin/TP2_INFO607_BECHET_TROGNON: main.o Liste.o Pile.o
 	gcc $^ -g -O0 -Wall -Wextra -I./headers  -o $@ 
 # -I pour le chemin des '#include'
 

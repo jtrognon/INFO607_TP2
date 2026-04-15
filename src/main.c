@@ -6,6 +6,7 @@
 int main()
 {
     #ifdef DEBUG
+        testPile();
         testListe();
     #endif
     
