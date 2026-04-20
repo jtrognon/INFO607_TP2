@@ -61,24 +61,3 @@ int rabinKarp(char* texte, char* motif)
 
     return res;
 }
-
-int main()
-{
-    char* texte = "123456789012345678901234567890123456789012345678901234567890";
-    char* motif = "901";
-
-    clock_t debut = clock();
-    int pos = rabinKarp(texte, motif);
-    clock_t fin = clock();
-
-    if (pos <= (int)strlen(texte))
-    {
-        printf("Trouvé en position %d\n", pos);
-    } else
-    {
-        printf("Pas trouvé\n");
-    }
-
-    printf("Rabin Karp : %f secondes\n", (double)(fin - debut) / CLOCKS_PER_SEC);
-    return 0;
-}

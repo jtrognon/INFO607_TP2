@@ -37,24 +37,3 @@ int bruteForce(char* texte, char* motif)
 
     return res;
 }
-
-int main()
-{
-    char* texte = "123456789012345678901234567890123456789012345678901234567890";
-    char* motif = "901";
-
-    clock_t debut = clock();
-    int pos = bruteForce(texte, motif);
-    clock_t fin = clock();
-
-    if (pos <= (int)strlen(texte))
-    {
-        printf("trouvé en position %d\n", pos);
-    } else
-    {
-        printf("pas trouvé\n");
-    }
-
-    printf("Brute Force : %f secondes\n", (double)(fin - debut) / CLOCKS_PER_SEC);
-    return 0;
-}
